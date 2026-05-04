@@ -2,6 +2,10 @@
 
 ROS 2 package that implements a **robot-level finite state machine (FSM)** using:
 
+```bash
+ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py
+```
+
 - a non-lifecycle **supervisor** node (`supervisor_node`), and
 - one **LifecycleNode** per FSM state:
   - `initializing_state_node`
