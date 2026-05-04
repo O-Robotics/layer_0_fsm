@@ -11,4 +11,46 @@ profiles:
 
   - profile:
       id: 301
-      processes: []
+      transitions:
+        auto_transition_on: false
+        auto_transition_profile:
+        fault_transition_on: true
+        fault_transition_profile: 400
+
+      processes:
+        # Logic block: layer_1_hardware bringup (critical)
+        - name: "amr_sweeper_layer_1_hardware_bringup"
+          importance: "critical"
+          startup:
+            exec: "ros2 launch amr_sweeper_layer_1_hardware_bringup amr_sweeper_layer_1_hardware_bringup.launch.py"
+            args:
+              - "robot_namespace:=amr_sweeper"
+              - "use_battery_node:=true"
+              - "use_system_info_node:=true"
+              - "use_usb_cameras:=false"
+            ready:
+              - type: "topic"
+                target: "/amr_sweeper/system_info"
+                required: true
+              - type: "service"
+                target: "/amr_sweeper/amr_sweeper_battery_node/get_parameters"
+                required: true
+            window_ms: 8000
+          rosout_triggers:
+            - "node=amr_sweeper_system_info_node;level>=ERROR;action=FAULT"
+            - "node=amr_sweeper_system_info_node;level>=WARN;action=DEGRADED"
+            - "node=amr_sweeper_system_info_node;match=Could not open file;action=FAULT"
+            - "node=amr_sweeper_battery_node;level>=ERROR;action=FAULT"
+            - "node=amr_sweeper_battery_node;level>=WARN;action=DEGRADED"
+          errors:
+            on_readiness_fail: "FAULT"
+            on_unexpected_exit: "FAULT"
+            priority: 250
+            force: true
+          restart:
+            max_restarts: 5
+            restart_delay_ms: 1000
+          shutdown:
+            sigint_timeout_ms: 1000
+            sigterm_timeout_ms: 1000
+            sigkill_timeout_ms: 1000
