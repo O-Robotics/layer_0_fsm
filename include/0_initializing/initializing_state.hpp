@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <string>
 
-#include "amr_sweeper_fsm/srv/request_state.hpp"
+#include "amr_sweeper_layer_0_fsm/srv/request_state.hpp"
 
 namespace fsm_layer_0::states::initializing
 {
@@ -65,7 +65,7 @@ private:
   double request_response_timeout_sec_{5.0};
 
   // ---- Runtime ----
-  rclcpp::Client<amr_sweeper_fsm::srv::RequestState>::SharedPtr request_state_client_;
+  rclcpp::Client<amr_sweeper_layer_0_fsm::srv::RequestState>::SharedPtr request_state_client_;
   bool transition_requested_{false};
 };
 

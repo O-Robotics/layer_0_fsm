@@ -3,7 +3,7 @@ AMR Sweeper FSM - Commands and Interfaces
 
 Assumptions
 -----------
-- Package: amr_sweeper_fsm  (folder: /fsm_layer_0)
+- Package: amr_sweeper_layer_0_fsm  (folder: /fsm_layer_0)
 - Default namespace in launch: /amr_sweeper
 - Supervisor node name: supervisor (within namespace)
 - State nodes (LifecycleNodes): initializing_state, idling_state, running_state, charging_state, fault_state
@@ -15,9 +15,9 @@ If you launch with a different namespace, replace '/amr_sweeper' accordingly.
 Terminal A:
   cd ~/ros2_ws
   source /opt/ros/humble/setup.bash
-  colcon build --packages-select amr_sweeper_fsm
+  colcon build --packages-select amr_sweeper_layer_0_fsm
   source install/setup.bash
-  ros2 launch amr_sweeper_fsm amr_sweeper_fsm.launch.py
+  ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py
 
 Arguments (pass arguments as '<name>:=<value>'):
     'namespace': Top-level namespace for all FSM nodes. (default: 'amr_sweeper')
@@ -25,10 +25,10 @@ Arguments (pass arguments as '<name>:=<value>'):
     'start_profile': Startup FSM profile id. (default: '001')
     'tick_period_ms': Supervisor tick period in milliseconds. (default: '100')
     'state_params_file': FSM state parameters YAML. Defines per-state profiles.
-      (default: '<package_share>/share/amr_sweeper_fsm/config/state_parameters.yaml')
+      (default: '<package_share>/share/amr_sweeper_layer_0_fsm/config/state_parameters.yaml')
 
 "TEST"
-ros2 launch amr_sweeper_fsm amr_sweeper_fsm.launch.py start_profile:=000
+ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py start_profile:=000
 
 2) Discover ROS graph
 ---------------------
@@ -51,7 +51,7 @@ Fully-qualified (default namespace):
   /amr_sweeper/request_state
 
 Type:
-  amr_sweeper_fsm/srv/RequestState
+  amr_sweeper_layer_0_fsm/srv/RequestState
 
 Request fields (srv/RequestState.srv):
 --------------------------------------
@@ -67,7 +67,7 @@ Request fields (srv/RequestState.srv):
 Example: request RUNNING default (profile 200)
 
   ros2 service call /amr_sweeper/request_state \
-    amr_sweeper_fsm/srv/RequestState \
+    amr_sweeper_layer_0_fsm/srv/RequestState \
     "{target_state: 'RUNNING',
       target_lifecycle: '',
       target_profile_id: 200,
@@ -80,7 +80,7 @@ Example: request RUNNING default (profile 200)
 Example: request RUNNING (profile 201)
 
   ros2 service call /amr_sweeper/request_state \
-    amr_sweeper_fsm/srv/RequestState \
+    amr_sweeper_layer_0_fsm/srv/RequestState \
     "{target_state: 'RUNNING',
       target_lifecycle: '',
       target_profile_id: 201,
@@ -93,7 +93,7 @@ Example: request RUNNING (profile 201)
 Example: request CHARGING default but keep lifecycle node Inactive (staging)
 
   ros2 service call /amr_sweeper/request_state \
-    amr_sweeper_fsm/srv/RequestState \
+    amr_sweeper_layer_0_fsm/srv/RequestState \
     "{target_state: 'CHARGING',
       target_lifecycle: 'Inactive',
       target_profile_id: 300,
@@ -120,7 +120,7 @@ Topic 1: fsm_state
 
 
 Topic 2: fsm_status
-  Type: amr_sweeper_fsm/msg/FSMStatus
+  Type: amr_sweeper_layer_0_fsm/msg/FSMStatus
   Default fully-qualified: /amr_sweeper/fsm_status
 
   ros2 topic echo /amr_sweeper/fsm_status
@@ -148,16 +148,16 @@ Force a lifecycle transition directly (debug only; bypasses supervisor arbitrati
 
 5) Test script
 --------------
-File (from ws): ./src/fsm_layer_0/tests/amr_sweeper_fsm.tests.py
+File (from ws): ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py
 
 A) Single request (wait for settle):
-  ./src/fsm_layer_0/tests/amr_sweeper_fsm.tests.py --namespace amr_sweeper --target RUNNING --wait
+  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target RUNNING --wait
 
 B) Sequence with dwell times:
-  ./src/fsm_layer_0/tests/amr_sweeper_fsm.tests.py --namespace amr_sweeper --sequence IDLING:2,RUNNING:5,CHARGING:5 --wait
+  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --sequence IDLING:2,RUNNING:5,CHARGING:5 --wait
 
 C) Force FAULT with high priority:
-  ./src/fsm_layer_0/tests/amr_sweeper_fsm.tests.py --namespace amr_sweeper --target FAULT --priority 200 --force --reason "e-stop" --wait
+  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target FAULT --priority 200 --force --reason "e-stop" --wait
 
 
 

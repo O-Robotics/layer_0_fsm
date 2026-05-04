@@ -600,7 +600,7 @@ StateNodeBase::on_configure(const rclcpp_lifecycle::State &)
   // Create client once (service name may change via params, so you may want to recreate if it changes)
   if (!request_state_client_) {
     request_state_client_ =
-      this->create_client<amr_sweeper_fsm::srv::RequestState>(request_state_service_);
+      this->create_client<amr_sweeper_layer_0_fsm::srv::RequestState>(request_state_service_);
   }
 
   {
@@ -621,7 +621,7 @@ StateNodeBase::on_configure(const rclcpp_lifecycle::State &)
       // Resolve YAML path (allow relative paths under the package share dir).
       std::filesystem::path yaml_path = profiles_file_;
       if (yaml_path.is_relative()) {
-        const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_fsm");
+        const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_layer_0_fsm");
         yaml_path = std::filesystem::path(share_dir) / yaml_path;
       }
 
@@ -668,7 +668,7 @@ if (!profiles_file_.empty()) {
 
   std::filesystem::path yaml_path = profiles_file_;
   if (yaml_path.is_relative()) {
-    const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_fsm");
+    const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_layer_0_fsm");
     yaml_path = std::filesystem::path(share_dir) / yaml_path;
   }
 
@@ -730,7 +730,7 @@ if (!profiles_file_.empty()) {
     if (!profiles_file_.empty()) {
       std::filesystem::path yaml_path = profiles_file_;
       if (yaml_path.is_relative()) {
-        const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_fsm");
+        const auto share_dir = ament_index_cpp::get_package_share_directory("amr_sweeper_layer_0_fsm");
         yaml_path = std::filesystem::path(share_dir) / yaml_path;
       }
 
@@ -873,7 +873,7 @@ if (auto_transition_on_) {
       "auto_transition_on is true but supervisor RequestState service '%s' is not ready; ignoring",
       request_state_service_.c_str());
   } else {
-    auto req = std::make_shared<amr_sweeper_fsm::srv::RequestState::Request>();
+    auto req = std::make_shared<amr_sweeper_layer_0_fsm::srv::RequestState::Request>();
     req->target_state = target_state;
     req->target_lifecycle.clear();
     req->target_profile_id = auto_transition_profile_;
@@ -1403,7 +1403,7 @@ void fsm_layer_0::StateNodeBase::handle_profile_error_policy_(
     ? pp.errors.lifecycle_target
     : fault_lifecycle_target_;
 
-  auto req = std::make_shared<amr_sweeper_fsm::srv::RequestState::Request>();
+  auto req = std::make_shared<amr_sweeper_layer_0_fsm::srv::RequestState::Request>();
   req->target_state = action;
   req->target_lifecycle = lifecycle_target;
   req->target_profile_id = target_profile_id;
@@ -1454,7 +1454,7 @@ void StateNodeBase::handle_fault_action(const std::string & reason)
     return;
   }
 
-  auto req = std::make_shared<amr_sweeper_fsm::srv::RequestState::Request>();
+  auto req = std::make_shared<amr_sweeper_layer_0_fsm::srv::RequestState::Request>();
 
   // Request a transition based on the profile's `transitions.fault_*` settings.
   const uint16_t target_profile = fault_transition_profile_;
@@ -1560,8 +1560,8 @@ void StateNodeBase::on_rosout(const rcl_interfaces::msg::Log::SharedPtr msg)
 
       fault_requested_ = true;
 
-      // Service is defined in amr_sweeper_fsm (see generated request_state.hpp)
-      auto req = std::make_shared<amr_sweeper_fsm::srv::RequestState::Request>();
+      // Service is defined in amr_sweeper_layer_0_fsm (see generated request_state.hpp)
+      auto req = std::make_shared<amr_sweeper_layer_0_fsm::srv::RequestState::Request>();
       req->target_state = "IDLING";
       req->target_lifecycle.clear();
       req->target_profile_id = 100;  // Default IDLING profile (*00)

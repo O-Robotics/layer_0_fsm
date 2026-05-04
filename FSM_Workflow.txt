@@ -3,7 +3,7 @@ AMR Sweeper FSM (Layer 0) — FSM Workflow
 
 Scope
 -----
-This document describes the workflow of the AMR-Sweeper's FSM in fsm_layer_0 (amr_sweeper_fsm):
+This document describes the workflow of the AMR-Sweeper's FSM in fsm_layer_0 (amr_sweeper_layer_0_fsm):
   - what the supervisor does
   - what each state is responsible for
   - how startup gating works (INITIALIZING → IDLING / FAULT)

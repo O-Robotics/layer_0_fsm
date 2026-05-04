@@ -101,10 +101,10 @@ static std::string profiles_yaml_path_for_state_id(int8_t state_id, std::string 
   }
 
   try {
-    const auto share = ament_index_cpp::get_package_share_directory("amr_sweeper_fsm");
+    const auto share = ament_index_cpp::get_package_share_directory("amr_sweeper_layer_0_fsm");
     return share + "/config/profiles/" + filename;
   } catch (const std::exception & e) {
-    error = std::string("get_package_share_directory(amr_sweeper_fsm) failed: ") + e.what();
+    error = std::string("get_package_share_directory(amr_sweeper_layer_0_fsm) failed: ") + e.what();
     return "";
   }
 }
@@ -272,7 +272,7 @@ SupervisorNode::SupervisorNode()
   // Configure decoupled publishing timers from parameters.
   init_publish_rules();
 
-  request_srv_ = this->create_service<amr_sweeper_fsm::srv::RequestState>(
+  request_srv_ = this->create_service<amr_sweeper_layer_0_fsm::srv::RequestState>(
     "request_state",
     std::bind(&SupervisorNode::on_request_state, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -796,8 +796,8 @@ uint8_t SupervisorNode::effective_last_priority() const
 }
 
 void SupervisorNode::on_request_state(
-  const std::shared_ptr<amr_sweeper_fsm::srv::RequestState::Request> req,
-  std::shared_ptr<amr_sweeper_fsm::srv::RequestState::Response> resp)
+  const std::shared_ptr<amr_sweeper_layer_0_fsm::srv::RequestState::Request> req,
+  std::shared_ptr<amr_sweeper_layer_0_fsm::srv::RequestState::Response> resp)
 {
   std::lock_guard<std::mutex> lk(mtx_);
 
@@ -953,9 +953,9 @@ void SupervisorNode::init_publish_rules()
 
     // Create publisher for this rule.
     if (rule.msg_type == PublishMsgType::FSM_STATE) {
-      rule.state_pub = this->create_publisher<amr_sweeper_fsm::msg::FSMState>(rule.topic, 10);
+      rule.state_pub = this->create_publisher<amr_sweeper_layer_0_fsm::msg::FSMState>(rule.topic, 10);
     } else {
-      rule.status_pub = this->create_publisher<amr_sweeper_fsm::msg::FSMStatus>(rule.topic, 10);
+      rule.status_pub = this->create_publisher<amr_sweeper_layer_0_fsm::msg::FSMStatus>(rule.topic, 10);
     }
 
     // Create an independent timer for this rule. Publishing is decoupled from tick().
@@ -1080,20 +1080,20 @@ bool SupervisorNode::parse_publish_rule(const std::string & rule_str, PublishRul
   out.source = source;
 
   // Message type + source validation.
-  if (type == "amr_sweeper_fsm/msg/FSMState") {
+  if (type == "amr_sweeper_layer_0_fsm/msg/FSMState") {
     out.msg_type = PublishMsgType::FSM_STATE;
     if (source != "state") {
       error = "FSMState only supports source=state";
       return false;
     }
-  } else if (type == "amr_sweeper_fsm/msg/FSMStatus") {
+  } else if (type == "amr_sweeper_layer_0_fsm/msg/FSMStatus") {
     out.msg_type = PublishMsgType::FSM_STATUS;
     if (source != "status") {
       error = "FSMStatus only supports source=status";
       return false;
     }
   } else {
-    error = "unsupported type (supported: amr_sweeper_fsm/msg/FSMState, amr_sweeper_fsm/msg/FSMStatus)";
+    error = "unsupported type (supported: amr_sweeper_layer_0_fsm/msg/FSMState, amr_sweeper_layer_0_fsm/msg/FSMStatus)";
     return false;
   }
 
@@ -1132,18 +1132,18 @@ void SupervisorNode::publish_from_rule(const PublishRule & rule, const StatusSna
   }
 }
 
-amr_sweeper_fsm::msg::FSMState SupervisorNode::build_state_payload(const StatusSnapshot & snap) const
+amr_sweeper_layer_0_fsm::msg::FSMState SupervisorNode::build_state_payload(const StatusSnapshot & snap) const
 {
-  amr_sweeper_fsm::msg::FSMState st;
+  amr_sweeper_layer_0_fsm::msg::FSMState st;
   st.stamp = this->now();
   st.current_state = state_name(snap.current_state);
   st.current_profile = snap.current_profile;
   return st;
 }
 
-amr_sweeper_fsm::msg::FSMStatus SupervisorNode::build_status_payload(const StatusSnapshot & snap) const
+amr_sweeper_layer_0_fsm::msg::FSMStatus SupervisorNode::build_status_payload(const StatusSnapshot & snap) const
 {
-  amr_sweeper_fsm::msg::FSMStatus st;
+  amr_sweeper_layer_0_fsm::msg::FSMStatus st;
   st.stamp = this->now();
   st.current_state = state_name(snap.current_state);
   st.current_lifecycle_state = snap.active_lifecycle_label;

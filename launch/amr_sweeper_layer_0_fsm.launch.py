@@ -65,7 +65,7 @@ def generate_launch_description():
 
     # Default: package_share/config/state_parameters.yaml
     default_state_params = os.path.join(
-        get_package_share_directory("amr_sweeper_fsm"),
+        get_package_share_directory("amr_sweeper_layer_0_fsm"),
         "config",
         "state_parameters.yaml",
     )
@@ -84,7 +84,7 @@ def generate_launch_description():
 
     # Supervisor (non-lifecycle)
     supervisor = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="supervisor_node",
         namespace=namespace,
         name="supervisor",
@@ -99,7 +99,7 @@ def generate_launch_description():
 
     # FSM-state lifecycle nodes (one per FSM-state)
     initializing = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="initializing_state_node",
         namespace=namespace,
         name="initializing_state",
@@ -111,7 +111,7 @@ def generate_launch_description():
     )
 
     idling = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="idling_state_node",
         namespace=namespace,
         name="idling_state",
@@ -123,7 +123,7 @@ def generate_launch_description():
     )
 
     running = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="running_state_node",
         namespace=namespace,
         name="running_state",
@@ -135,7 +135,7 @@ def generate_launch_description():
     )
 
     charging = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="charging_state_node",
         namespace=namespace,
         name="charging_state",
@@ -147,7 +147,7 @@ def generate_launch_description():
     )
 
     fault = Node(
-        package="amr_sweeper_fsm",
+        package="amr_sweeper_layer_0_fsm",
         executable="fault_state_node",
         namespace=namespace,
         name="fault_state",

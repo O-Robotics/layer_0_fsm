@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(amr_sweeper_fsm)
+project(amr_sweeper_layer_0_fsm)
 
 # -----------------------------
 # Compiler / warnings

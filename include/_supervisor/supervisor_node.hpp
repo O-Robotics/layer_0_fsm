@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-#include "amr_sweeper_fsm/msg/fsm_state.hpp"
-#include "amr_sweeper_fsm/msg/fsm_status.hpp"
-#include "amr_sweeper_fsm/srv/request_state.hpp"
+#include "amr_sweeper_layer_0_fsm/msg/fsm_state.hpp"
+#include "amr_sweeper_layer_0_fsm/msg/fsm_status.hpp"
+#include "amr_sweeper_layer_0_fsm/srv/request_state.hpp"
 #include "lifecycle_msgs/srv/change_state.hpp"
 #include "lifecycle_msgs/srv/get_state.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -35,8 +35,8 @@ namespace fsm_layer_0
  *  - service_wait_ms: max wait for lifecycle services to become ready
  *  - op_timeout_ms: operation timeout (enter/switch) in milliseconds
  *  - publish.rules: list of rule strings, e.g.
- *      "topic=fsm_state;type=amr_sweeper_fsm/msg/FSMState;period_ms=1000;source=state"
- *      "topic=fsm_status;type=amr_sweeper_fsm/msg/FSMStatus;period_ms=1000;source=status"
+ *      "topic=fsm_state;type=amr_sweeper_layer_0_fsm/msg/FSMState;period_ms=1000;source=state"
+ *      "topic=fsm_status;type=amr_sweeper_layer_0_fsm/msg/FSMStatus;period_ms=1000;source=status"
  */
 class SupervisorNode : public rclcpp::Node
 {
@@ -111,8 +111,8 @@ private:
   // ===========================================================================
 
   void on_request_state(
-    const std::shared_ptr<amr_sweeper_fsm::srv::RequestState::Request> req,
-    std::shared_ptr<amr_sweeper_fsm::srv::RequestState::Response> resp);
+    const std::shared_ptr<amr_sweeper_layer_0_fsm::srv::RequestState::Request> req,
+    std::shared_ptr<amr_sweeper_layer_0_fsm::srv::RequestState::Response> resp);
 
   // ===========================================================================
   // Status publishing (independent of tick rate)
@@ -138,14 +138,14 @@ private:
     std::string raw;
 
     std::string topic;
-    std::string type;    // "amr_sweeper_fsm/msg/FSMState" or "amr_sweeper_fsm/msg/FSMStatus"
+    std::string type;    // "amr_sweeper_layer_0_fsm/msg/FSMState" or "amr_sweeper_layer_0_fsm/msg/FSMStatus"
     std::string source;  // "state" or "status"
     uint32_t period_ms{1000};  // publish period in milliseconds
 
     PublishMsgType msg_type{PublishMsgType::FSM_STATE};
 
-    rclcpp::Publisher<amr_sweeper_fsm::msg::FSMState>::SharedPtr state_pub;
-    rclcpp::Publisher<amr_sweeper_fsm::msg::FSMStatus>::SharedPtr status_pub;
+    rclcpp::Publisher<amr_sweeper_layer_0_fsm::msg::FSMState>::SharedPtr state_pub;
+    rclcpp::Publisher<amr_sweeper_layer_0_fsm::msg::FSMStatus>::SharedPtr status_pub;
 
     rclcpp::TimerBase::SharedPtr timer;
   };
@@ -156,8 +156,8 @@ private:
   StatusSnapshot snapshot_status() const;
 
   void publish_from_rule(const PublishRule & rule, const StatusSnapshot & snap);
-  amr_sweeper_fsm::msg::FSMState build_state_payload(const StatusSnapshot & snap) const;
-  amr_sweeper_fsm::msg::FSMStatus build_status_payload(const StatusSnapshot & snap) const;
+  amr_sweeper_layer_0_fsm::msg::FSMState build_state_payload(const StatusSnapshot & snap) const;
+  amr_sweeper_layer_0_fsm::msg::FSMStatus build_status_payload(const StatusSnapshot & snap) const;
 
     // Priority "aging" helper (same policy as the original code: 1 step per second).
   uint8_t effective_last_priority() const;
@@ -227,7 +227,7 @@ private:
   std::vector<PublishRule> publish_rules_;
 
   // ROS interfaces.
-  rclcpp::Service<amr_sweeper_fsm::srv::RequestState>::SharedPtr request_srv_;
+  rclcpp::Service<amr_sweeper_layer_0_fsm::srv::RequestState>::SharedPtr request_srv_;
 
   // Engine tick timer.
   rclcpp::TimerBase::SharedPtr tick_timer_;

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""amr_sweeper_fsm.tests.py
+"""amr_sweeper_layer_0_fsm.tests.py
 
 FSM test harness with detailed node lifecycle reporting.
 
@@ -133,7 +133,7 @@ def service_call_request_state(service: str, target_state: str, target_profile_i
         f"target_profile_id: {target_profile_id}, "
         f"requester: '{requester}', priority: {priority}, force: {force_txt}, reason: '{reason}'}}"
     )
-    cmd = f"timeout {timeout_sec} ros2 service call {service} amr_sweeper_fsm/srv/RequestState \"{payload}\""
+    cmd = f"timeout {timeout_sec} ros2 service call {service} amr_sweeper_layer_0_fsm/srv/RequestState \"{payload}\""
     rc,out,err = sh(cmd)
     txt = (out + "\n" + err).strip()
     accepted = bool(re.search(r"accepted=\s*True", txt) or re.search(r"accepted:\s*true", txt, re.I))

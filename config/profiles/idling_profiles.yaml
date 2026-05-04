@@ -22,7 +22,7 @@ profiles:
         - name: "fsm_tester"
           importance: "critical"
           startup:
-            exec: "/home/dev/rob_ws/install/amr_sweeper_fsm/lib/amr_sweeper_fsm/fsm_tester_node"
+            exec: "ros2 run amr_sweeper_layer_0_fsm fsm_tester_node"
             args:
               - "--ros-args -r __ns:=/amr_sweeper"
               - "-p exit_after_ms:=2000"
@@ -67,7 +67,7 @@ profiles:
         - name: "system_info"
           importance: "critical"
           startup:
-            exec: "/home/dev/rob_ws/install/system_info/lib/system_info/system_info_node"
+            exec: "ros2 run amr_sweeper_system_info amr_sweeper_system_info_node"
             args:
               - "--ros-args"
               - "-r __ns:=/amr_sweeper"
@@ -77,9 +77,9 @@ profiles:
                 required: true
             window_ms: 5000
           rosout_triggers:
-            - "node=system_info_node;level>=ERROR;action=FAULT"
-            - "node=system_info_node;level>=WARN;action=DEGRADED"
-            - "node=system_info_node;match=Could not open file;action=FAULT"            
+            - "node=amr_sweeper_system_info_node;level>=ERROR;action=FAULT"
+            - "node=amr_sweeper_system_info_node;level>=WARN;action=DEGRADED"
+            - "node=amr_sweeper_system_info_node;match=Could not open file;action=FAULT"            
           errors:
             on_readiness_fail: "FAULT"
             on_unexpected_exit: "FAULT"
@@ -97,18 +97,18 @@ profiles:
         - name: "amr_sweeper_battery"
           importance: "critical"
           startup:
-            exec: "/home/dev/rob_ws/install/amr_sweeper_battery/lib/amr_sweeper_battery/amr_sweeper_battery_node"
+            exec: "ros2 run amr_sweeper_battery amr_sweeper_battery_node"
             args:
               - "--ros-args"
               - "-r __ns:=/amr_sweeper"
             ready:
               - type: "service"
-                target: "/amr_sweeper/amr_sweeper_battery/get_parameters"
+                target: "/amr_sweeper/amr_sweeper_battery_node/get_parameters"
                 required: true
             window_ms: 5000
           rosout_triggers:
-            - "node=amr_sweeper_battery;level>=ERROR;action=FAULT"
-            - "node=amr_sweeper_battery;level>=WARN;action=DEGRADED"
+            - "node=amr_sweeper_battery_node;level>=ERROR;action=FAULT"
+            - "node=amr_sweeper_battery_node;level>=WARN;action=DEGRADED"
           errors:
             on_readiness_fail: "FAULT"
             on_unexpected_exit: "FAULT"
