@@ -66,7 +66,7 @@ ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py
   Top-level namespace for all nodes.
 
 - `use_sim_time` (default: `false`)  
-  Passed to all nodes.
+  Passed to all nodes. When `true`, the FSM follows ROS time from `/clock`.
 
 - `start_profile` (default: `001`)  
   Passed to the supervisor as `desired_profile` (integer). This selects the startup profile id.
@@ -81,7 +81,10 @@ ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py
 Example (5 second tick, start profile 201, custom namespace):
 
 ```bash
-ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py   namespace:=robot1   start_profile:=201   tick_period_ms:=5000
+ros2 launch amr_sweeper_layer_0_fsm amr_sweeper_layer_0_fsm.launch.py \
+  namespace:=robot1 \
+  start_profile:=201 \
+  tick_period_ms:=5000
 ```
 
 ---
@@ -120,6 +123,11 @@ Each state has its own profile file with a list of profiles:
   - readiness checks (`startup.ready[]` supporting at least `topic` and `service` targets)
   - restart and shutdown policy
   - optional `rosout_triggers`
+
+The default profile wiring is now:
+
+- `001`, `101`, `301`, `400`: layer 1 hardware bringup only
+- `201`: layer 1 hardware bringup, layer 2 controller bringup, optional joystick, and layer 3 localization/navigation bringup
 
 
 ---

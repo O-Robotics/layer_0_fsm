@@ -3,7 +3,7 @@ AMR Sweeper FSM - Commands and Interfaces
 
 Assumptions
 -----------
-- Package: amr_sweeper_layer_0_fsm  (folder: /fsm_layer_0)
+- Package: amr_sweeper_layer_0_fsm  (folder: /layer_0_fsm)
 - Default namespace in launch: /amr_sweeper
 - Supervisor node name: supervisor (within namespace)
 - State nodes (LifecycleNodes): initializing_state, idling_state, running_state, charging_state, fault_state
@@ -21,7 +21,7 @@ Terminal A:
 
 Arguments (pass arguments as '<name>:=<value>'):
     'namespace': Top-level namespace for all FSM nodes. (default: 'amr_sweeper')
-    'use_sim_time': Use simulated time (Gazebo/Sim). (default: 'false')
+    'use_sim_time': Use ROS time from /clock when true. (default: 'false')
     'start_profile': Startup FSM profile id. (default: '001')
     'tick_period_ms': Supervisor tick period in milliseconds. (default: '100')
     'state_params_file': FSM state parameters YAML. Defines per-state profiles.
@@ -89,6 +89,12 @@ Example: request RUNNING (profile 201)
       force: false,
       reason: 'test RUNNING profile 201'}"
 
+Profile 201 runtime wiring:
+  - layer 1 hardware bringup (critical)
+  - layer 2 controllers bringup without joystick (critical)
+  - layer 3 navigation/localization bringup (degraded)
+  - joystick launch as a separate optional process
+
 
 Example: request CHARGING default but keep lifecycle node Inactive (staging)
 
@@ -113,7 +119,7 @@ Notes on priority / force
 ------------------------------------------
 
 Topic 1: fsm_state
-  Type: std_msgs/msg/String
+  Type: amr_sweeper_layer_0_fsm/msg/FSMState
   Default fully-qualified: /amr_sweeper/fsm_state
 
   ros2 topic echo /amr_sweeper/fsm_state
@@ -148,16 +154,16 @@ Force a lifecycle transition directly (debug only; bypasses supervisor arbitrati
 
 5) Test script
 --------------
-File (from ws): ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py
+File (from ws): ./src/layer_0_fsm/tests/amr_sweeper_layer_0_fsm.tests.py
 
 A) Single request (wait for settle):
-  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target RUNNING --wait
+  ./src/layer_0_fsm/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target RUNNING --wait
 
 B) Sequence with dwell times:
-  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --sequence IDLING:2,RUNNING:5,CHARGING:5 --wait
+  ./src/layer_0_fsm/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --sequence IDLING:2,RUNNING:5,CHARGING:5 --wait
 
 C) Force FAULT with high priority:
-  ./src/fsm_layer_0/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target FAULT --priority 200 --force --reason "e-stop" --wait
+  ./src/layer_0_fsm/tests/amr_sweeper_layer_0_fsm.tests.py --namespace amr_sweeper --target FAULT --priority 200 --force --reason "e-stop" --wait
 
 
 

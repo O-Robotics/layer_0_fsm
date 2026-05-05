@@ -115,7 +115,7 @@ profiles:
         fault_transition_profile: 400
 
       processes:
-        # Logic block: hardware_layer_2 (critical)
+        # Logic block: layer_1_hardware bringup (critical)
         - name: "amr_sweeper_layer_1_hardware_bringup"
           importance: "critical"
           startup:
@@ -144,4 +144,3 @@ profiles:
             sigint_timeout_ms: 1000
             sigterm_timeout_ms: 1000
             sigkill_timeout_ms: 1000
-

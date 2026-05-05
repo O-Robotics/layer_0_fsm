@@ -48,7 +48,7 @@ def generate_launch_description():
     declare_use_sim_time = DeclareLaunchArgument(
         "use_sim_time",
         default_value="false",
-        description="Use simulated time (Gazebo/Sim).",
+        description="Use ROS time from /clock when true.",
     )
 
     declare_start_profile = DeclareLaunchArgument(

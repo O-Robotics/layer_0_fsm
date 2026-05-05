@@ -100,17 +100,23 @@ profiles:
             sigterm_timeout_ms: 1000
             sigkill_timeout_ms: 1000
 
-        # Logic block: twist mux (critical)
-        - name: "twist_mux"
+        # Logic block: layer_2_controllers bringup (critical)
+        - name: "amr_sweeper_layer_2_controllers_bringup"
           importance: "critical"
           startup:
-            exec: "ros2"
+            exec: "ros2 launch amr_sweeper_layer_2_controllers_bringup amr_sweeper_layer_2_controllers_bringup.launch.py"
             args:
-              - "launch amr_sweeper_twist_mux twist_mux.launch.py"
               - "namespace:=amr_sweeper"
+              - "use_joystick:=false"
+              - "use_twist_mux:=true"
+              - "use_wheel_controller:=true"
+              - "use_tool_controller:=true"
             ready:
               - type: "topic"
                 target: "/amr_sweeper/cmd_vel"
+                required: true
+              - type: "topic"
+                target: "/amr_sweeper/controller_steadydrive/commands"
                 required: true
             window_ms: 8000
           rosout_triggers:
@@ -129,24 +135,29 @@ profiles:
             sigterm_timeout_ms: 1500
             sigkill_timeout_ms: 1500
 
-        # Logic block: localization (degraded)
-        - name: "localization"
+        # Logic block: layer_3_navigation bringup (degraded)
+        - name: "amr_sweeper_layer_3_navigation_bringup"
           importance: "degraded"
           startup:
-            exec: "ros2"
+            exec: "ros2 launch amr_sweeper_layer_3_navigation_bringup amr_sweeper_layer_3_navigation_bringup.launch.py"
             args:
-              - "launch amr_sweeper_localization dual_ekf_navsat.launch.py"
               - "namespace:=amr_sweeper"
+              - "use_sim_time:=false"
+              - "use_localization:=true"
+              - "use_navigation:=true"
             ready:
               - type: "topic"
-                target: "/amr_sweeper/odometry/filtered"
+                target: "/amr_sweeper/odometry/global"
+                required: true
+              - type: "service"
+                target: "/amr_sweeper/controller_server/get_state"
                 required: true
             window_ms: 15000
           rosout_triggers:
             - "level>=FATAL;action=FAULT"
             - "level>=ERROR;action=FAULT"
           errors:
-            on_readiness_fail: "FAULT"
+            on_readiness_fail: "DEGRADED"
             on_unexpected_exit: "DEGRADED"
             priority: 230
             force: false
@@ -162,10 +173,10 @@ profiles:
         - name: "joystick"
           importance: "optional"
           startup:
-            exec: "ros2"
+            exec: "ros2 launch amr_sweeper_joystick joystick.launch.py"
             args:
-              - "launch amr_sweeper_joystick joystick.launch.py"
               - "namespace:=amr_sweeper"
+              - "joy_dev:=/dev/input/js0"
             ready:
               - type: "topic"
                 target: "/amr_sweeper/joy"
