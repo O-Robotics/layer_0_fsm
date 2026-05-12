@@ -147,7 +147,7 @@ profiles:
               - "use_navigation:=true"
             ready:
               - type: "topic"
-                target: "/amr_sweeper/odometry/global"
+                target: "/amr_sweeper/odometry/fused"
                 required: true
               - type: "service"
                 target: "/amr_sweeper/controller_server/get_state"
