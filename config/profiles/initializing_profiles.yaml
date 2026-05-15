@@ -69,7 +69,7 @@ profiles:
           startup:
             exec: "ros2 launch amr_sweeper_layer_1_hardware_bringup amr_sweeper_layer_1_hardware_bringup.launch.py"
             args:
-              - "robot_namespace:=amr_sweeper"
+              - "namespace:=amr_sweeper"
               - "use_battery_node:=true"
               - "use_system_info_node:=true"
               - "use_usb_cameras:=true"
